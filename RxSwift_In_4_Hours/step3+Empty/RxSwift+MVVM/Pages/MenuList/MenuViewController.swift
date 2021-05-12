@@ -38,13 +38,18 @@ class MenuViewController: UIViewController {
         
         //item - menu하나
         //index - indexPath
-        //현재 불린 cell
-        
+        //현재 불린 cell 
         viewModel.menuObservable
             .bind(to: tableView.rx.items(cellIdentifier: cellId, cellType: MenuItemTableViewCell.self)){index, item, cell in
+               
                 cell.title.text = item.name
                 cell.price.text = "\(item.price)"
                 cell.count.text = "\(item.count)"
+                // 이곳에서 호출하기
+                //self.viewModel.
+                cell.onChanged = {[weak self] increase in
+                    self?.viewModel.ChangeCount(item: item, increase: increase)
+                }
                 
             }
             .disposed(by: disposeBag)
@@ -86,6 +91,8 @@ class MenuViewController: UIViewController {
     @IBOutlet var totalPrice: UILabel!
 
     @IBAction func onClear() {
+        //선택한 갯수를 전체 clear
+        viewModel.clearAllItemSelections()
     }
 
     @IBAction func onOrder(_ sender: UIButton) {
@@ -97,7 +104,9 @@ class MenuViewController: UIViewController {
         //viewModel.totalPrice += 100 // UI에 다시 적용해줘야지만 실제 화면에서 바뀜
         
         viewModel.menuObservable.onNext([
-            Menu(name: "chaged", price: 0, count: 0)
+            Menu(id: 0, name: "chaged", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
+            Menu(id: 1, name: "chaged", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
+            Menu(id: 2, name: "chaged", price: Int.random(in: 100...1000), count: Int.random(in: 0...3)),
         ]) // 하나짜리로 쫙 바뀜
         
     }
