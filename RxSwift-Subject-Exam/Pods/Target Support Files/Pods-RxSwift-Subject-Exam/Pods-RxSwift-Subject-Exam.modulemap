@@ -1,0 +1,6 @@
+framework module Pods_RxSwift_Subject_Exam {
+  umbrella header "Pods-RxSwift-Subject-Exam-umbrella.h"
+
+  export *
+  module * { export * }
+}
