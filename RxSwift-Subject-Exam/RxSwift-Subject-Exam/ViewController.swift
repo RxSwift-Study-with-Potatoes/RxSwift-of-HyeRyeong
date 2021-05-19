@@ -7,13 +7,15 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
+import RxRelay
 
 class MyErrer: Error{
     let err = "err"
 }
 
 class ViewController: UIViewController {
-
+    let disposeBag = DisposeBag()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -53,7 +55,7 @@ class ViewController: UIViewController {
         // 6
         subscriptionTwo.dispose()
 
-        let disposeBag = DisposeBag()
+        
 
         // 7
         subject
@@ -122,5 +124,37 @@ class ViewController: UIViewController {
         
         print("---------last-----------------")
     }
-}
+    
+    @IBAction func startPublishRelay(_ sender: Any) {
+        print("PublishRelay")
 
+        let prelay = PublishRelay<Int>()
+        prelay.accept(0)
+        prelay.subscribe{ print("1 : \($0)")}
+            .disposed(by: disposeBag)
+    
+        prelay.accept(1)
+        prelay.accept(2)
+        
+        print("---------------")
+    }
+        
+        
+    
+    @IBAction func startBehaviorRelay(_ sender: Any) {
+        print("BehaviorRelay")
+        let brelay = BehaviorRelay(value: 1)
+        brelay.accept(2)
+        
+        brelay.subscribe{print("2 : \($0)")}
+            .disposed(by: disposeBag)
+        
+        brelay.accept(3)
+        brelay.accept(4)
+        
+        print("---------------")
+        
+    }
+
+
+}
